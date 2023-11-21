@@ -3,61 +3,413 @@
 @tailwind utilities;
 
 /******************************************************************/
-
 @font-face {
-  font-family: vazir;
-  src: url("../../font/vazir/Vazir-Bold.woff2") format("woff2"),
-    url("../../font/vazir/Vazir-Bold.woff") format("woff"),
-    url("../../font/vazir/Vazir-Bold.ttf") format("truetype");
+  font-family: vazir-farsi-digit;
+  src: url("../font/vazir/Farsi-Digits-Without-Latin/Vazir-Bold-FD-WOL.woff2")
+      format("woff2"),
+    url("../font/vazir/Vazir-Bold.woff") format("woff"),
+    url("../font/vazir/Vazir-Bold.ttf") format("truetype");
 }
 
 /*********************************************************/
-body{
-  @apply font-vazir
-}
-.products{
-  @apply grid grid-cols-3 w-auto gap-5 mt-10 
-}
-.product{
-  @apply w-[260px] h-[360px] m-auto  rounded-lg border-2 border-solid border-black 
+/* import fonts */
+/* @import url("https://fonts.googleapis.com/css2?family=Rubik&display=swap"); */
+
+body {
+  font-family: "vazir-farsi-digit";
 }
 
-.content{
-  @apply flex justify-around items-center mt-3 
+/* VARIABLES */
+:root {
+  --ff-primary: "vazir-farsi-digit";
+  /* --bg-color: #fff; */
+  --link-color: #000;
+  --link-size: 1.1rem;
+  --right-side-bg-color: 235, 255, 247;
+}
+/* rgb(247,255,247) */
+
+/* General CSS */
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  /* font-family: vazir; */
 }
 
-.btn{
-  @apply flex justify-center 
+html {
+  font-size: 16px;
+  overflow-x: hidden;
 }
 
-.addBtn{
-  @apply mt-3
+a {
+  text-decoration: none;
+  color: #000;
 }
 
-button{
-  @apply w-28 h-8 bg-blue-500 rounded-md  hover:text-white active:bg-green-500 duration-150
+/* APP CONTAINER */
+/* .app-container {
+  width: 100vw;
+  height: 100vh;
+} */
+
+/* APP BG */
+.app-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  z-index: -1;
+}
+.app-bg .left-side {
+  background-color: rgb(255, 255, 255);
+  width: 75%;
+  height: 100%;
+}
+.app-bg .right-side {
+  background-color: rgb(var(--right-side-bg-color));
+  width: 25%;
+  height: 100%;
 }
 
-/***** Sweet Alert *****/
+/* HEADER */
+header {
+  width: 100%;
+  height: 100px;
 
-.swal2-actions{
-  @apply flex gap-5
+  padding: 30px 10%;
+  display: flex;
+  justify-content: space-between;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+
+  z-index: 99;
 }
+header nav ul {
+  display: flex;
+  align-items: center;
+}
+header nav ul li {
+  list-style: none;
+  margin: 0 10px;
+  padding: 5px 5px;
+  border-radius: 15px;
+  background-color: rgba(58, 255, 91, 0.08);
+}
+header nav ul li:hover {
+  text-decoration: underline 2px;
+}
+
+header nav ul li a {
+  display: flex;
+  align-items: center;
+  height: 32px;
+  font-family: "vazir-farsi-digit";
+}
+header nav ul li.btn {
+  background-color: rgba(var(--right-side-bg-color), 0.4);
+  border: 1px solid rgb(var(--right-side-bg-color));
+}
+header nav ul li.btn img {
+  width: 32;
+  height: 32px;
+}
+header nav ul li.home a {
+  display: flex;
+  align-items: center;
+}
+header nav ul li.home a img {
+  margin-right: 5px;
+}
+/* HEADER -> SHOOPING BAG */
+.shopping-bag {
+  padding: 10px 5px;
+  background-color: green;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+.shopping-bag a {
+  display: flex;
+  align-items: center;
+}
+.shopping-bag a img {
+  width: 32px;
+  height: 32px;
+}
+.shopping-bag .total-items-in-cart {
+  margin-left: 10px;
+  padding: 5px;
+  background-color: rgb(242, 255, 58);
+  border-radius: 100%;
+}
+/* MAIN */
+/* main {
+  width: 100%;
+  background-color: royalblue;
+  position: relative;
+  top: 100px;
+} */
+/* main .products-preview {
+  width: 60%;
+  height: calc(100vh - 100px);
+  position: absolute;
+  left: 0;
+}
+main .model {
+  width: 40%;
+  height: calc(100vh - 100px);
+  position: absolute;
+  right: 0;
+  z-index: -1;
+} */
+/* PRODUCTS */
+/* .products-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+} */
+/* .product {
+  width: 300px;
+  border: 1px solid rgba(var(--right-side-bg-color), 0.4);
+  border-radius: 10px;
+  padding: 5px;
+}
+.product img {
+  width: 100%;
+} */
+/* MORE DETAILS */
+/*  */
+/* products list */
+.products-list {
+  width: 100vw;
+  height: 100vh;
+
+  padding-top: 100px;
+
+  display: flex;
+}
+
+/* PRODUCTS */
+.products {
+  height: 100%;
+  width: 75%;
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: repeat(3, 3fr);
+}
+.products img {
+  width: 200px;
+  /* filter: drop-shadow(30px 10px 4px #ddd); */
+}
+.products .item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 16px 24px 0 rgba(255, 255, 255, 0.4);
+}
+
+.products .item-container:hover {
+  box-shadow: 25px 12.5px 2px 0 rgb(208, 204, 204);
+  transition: all linear 0.1s;
+}
+
+.products .item .item-container {
+  width: 250px;
+  height: 90%;
+  background-color: #000000;
+  border-radius: 25px;
+  position: relative;
+}
+.products .item .item-container .item-img {
+  width: 100%;
+  height: 80%;
+
+  background-color: white;
+
+  border: 1px solid #000;
+  border-radius: 25px 25px 0 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.products .item .item-container .desc {
+  width: 100%;
+  color: #fff;
+  padding: 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-size: 12px;
+}
+.products .item .item-container .add-to-cart {
+  background-color: rgba(var(--right-side-bg-color), 0.7);
+  /* background-color: rgb(242, 255, 58); */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.products .item .item-container .add-to-wishlist {
+  background-color: rgba(255, 21, 21, 0.7);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  position: absolute;
+  top: 10px;
+  right: 60px;
+
+  padding: 5px;
+
+  border-radius: 50%;
+
+  cursor: pointer;
+}
+.products .item .item-container .add-to-cart img {
+  width: 32px;
+  height: 32px;
+}
+.products .item .item-container .add-to-wishlist img {
+  width: 32px;
+  height: 32px;
+
+  padding: 5px;
+}
+/* CART */
+.cart {
+  height: 100%;
+  width: 25%;
+  position: relative;
+}
+/* cart header */
+.cart-header {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+/* cart items */
+.cart-items {
+  max-height: calc(100vh - 247px);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+/* cart item */
+.cart-item {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px 0;
+}
+.cart-item:hover {
+  background-color: rgb(196, 189, 189);
+  transition: all linear 0.3s;
+}
+
+.cart-item div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* item info */
+.cart-item .item-info {
+  flex: 1;
+  background-color: rgba(255, 255, 255, 0.6);
+
+  border-radius: 0 10px 10px 0;
+
+  padding: 10px;
+}
+.cart-item .item-info:hover {
+  background-color: rgba(255, 0, 0, 0.6);
+  cursor: pointer;
+}
+.cart-item .item-info img {
+  width: 75px;
+}
+/* unit price */
+.cart-item .unit-price {
+  flex: 1;
+  font-size: 1.2rem;
+}
+/* units */
+.cart-item .units {
+  flex: 1;
+}
+.cart-item .units .number {
+  margin: 0 10px;
+
+  font-size: 1.2rem;
+}
+.cart-item .units .btn {
+  width: 20px;
+  height: 20px;
+
+  background-color: rgb(242, 255, 58);
+
+  border-radius: 50%;
+
+  font-weight: bold;
+
+  cursor: pointer;
+
+  -webkit-user-select: none; /* Chrome all / Safari all */
+  -moz-user-select: none; /* Firefox all */
+  -ms-user-select: none; /* IE 10+ */
+}
+
+/* cart footer */
+.cart-footer {
+  width: 100%;
+  background-color: rgb(255, 21, 21);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  border-left: 1px solid rgb(var(--right-side-bg-color));
+}
+.cart-footer div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 15px 0;
+
+  font-size: 1.3rem;
+}
+.cart-footer .subtotal {
+  background-color: rgb(59, 123, 207);
+}
+.cart-footer .checkout {
+  background-color: rgb(58, 255, 91);
+
+  cursor: pointer;
+}
+
+
+
 .btn.btn-success{
-  @apply bg-green-500   text-white  gap-2
+background-color:green;
+font-family: "vazir-farsi-digit";
 }
 .btn.btn-danger{
-  @apply bg-red-500  text-white
-}
- 
-  
-/************************* سبد خرید **********************************/
-.row{
-  @apply bg-slate-300 w-[650px] h-[300px] m-auto mt-10 overflow-y-auto
-}
-.item{
-  @apply flex justify-around items-center mt-2
-}
-button.remove{
-  @apply bg-red-400 hover:bg-red-500
-}
+  background-color: red;
+  font-family: "vazir-farsi-digit";
+  }

@@ -1,139 +1,142 @@
-/*const products = [
-    {id:1, title: 'guitar1', price:2000, },
-    {id:2, title: 'guitar2', price:1000, },
-    {id:3, title: 'guitar3', price:800,  },
-]*/
-/* Variables */
-const addBtn = document.querySelectorAll('.addBtn')
-const CartItems = document.querySelector('.CartItems')
+// SELECT ELEMENTS
+const productsEl = document.querySelector(".products");
+const cartItemsEl = document.querySelector(".cart-items");
+const subtotalEl = document.querySelector(".subtotal");
+const totalItemsInCartEl = document.querySelector(".total-items-in-cart");
 
+// RENDER PRODUCTS
+function renderProdcuts() {
+  products.forEach((product) => {
+    productsEl.innerHTML += `
+            <div class="item">
+                <div class="item-container">
+                    <div class="item-img">
+                        <img src="${product.imgSrc}" alt="${product.name}">
+                    </div>
+                    <div class="desc">
+                        <h2>${product.name}</h2>
+                        <h2><small>تومان</small>${product.price}</h2>
+                      
+                    </div>
+                   
+                    <div class="add-to-cart" onclick="addToCart(${product.id})">
+                        <img src="./assets/img/shopping-bag.png" alt="add to cart">
+                    </div>
+                </div>
+            </div>
+        `;
+  });
+}
+renderProdcuts();
 
-/* Event */ 
-if(addBtn) addBtn.forEach(addBtn => {
-    addBtn.addEventListener('click', addToCart);
-});
+// cart array
+let cart = JSON.parse(localStorage.getItem("CART")) || [];
+updateCart();
 
-if(CartItems) CartItems.addEventListener('click', removeToCart);
-    
+// ADD TO CART
+function addToCart(id) {
+  // check if prodcut already exist in cart
+  if (cart.some((item) => item.id === id)) {
+    changeNumberOfUnits("plus", id);
+  } else {
+    const item = products.find((product) => product.id === id);
 
+    cart.push({
+      ...item,
+      numberOfUnits: 1,
+    });
+  }
 
-/* Functions */
-//اضافه شدن به سبد
-function addToCart(e) {
- const title = document.querySelector('title')
- const id = Math.floor( Math.random() * Date.now() ).toString(36);
- CartItems.innerHTML += SetToDoElement(title, id); 
- addtodofromlocalstorage(title, id)
- Swal.fire({
-    position: "center",
-    icon: "success",
-    title: " ...محصول به سبد خرید اضافه شد ",
-    showConfirmButton: false,
-    timer: 1500
+  updateCart();
+}
+
+// update cart
+function updateCart() {
+  renderCartItems();
+  renderSubtotal();
+
+  // save cart to local storage
+  localStorage.setItem("CART", JSON.stringify(cart));
+}
+
+// calculate and render subtotal
+function renderSubtotal() {
+  let totalPrice = 0,
+    totalItems = 0;
+
+  cart.forEach((item) => {
+    totalPrice += item.price * item.numberOfUnits;
+    totalItems += item.numberOfUnits;
+  });
+
+  subtotalEl.innerHTML = `   ${totalPrice.toLocaleString()}   تومان   `;
+  totalItemsInCartEl.innerHTML = totalItems;
+}
+
+// render cart items
+function renderCartItems() {
+  cartItemsEl.innerHTML = ""; // clear cart element
+  cart.forEach((item) => {
+    cartItemsEl.innerHTML += `
+        <div class="cart-item">
+            <div class="item-info" onclick="removeItemFromCart(${item.id})">
+                <img src="${item.imgSrc}" alt="${item.name}">
+                <h4>${item.name}</h4>
+            </div>
+            <div class="unit-price">
+                <small>تومان</small>${item.price}
+            </div>
+            <div class="units">
+                <div class="btn minus" onclick="changeNumberOfUnits('minus', ${item.id})">-</div>
+                <div class="number">${item.numberOfUnits}</div>
+                <div class="btn plus" onclick="changeNumberOfUnits('plus', ${item.id})">+</div>           
+            </div>
+        </div>
+      `;
   });
 }
 
+// remove item from cart
+function removeItemFromCart(id) {
+  Swal.fire({
+    customClass: {
+      confirmButton: "btn btn-success",
+      cancelButton: "btn btn-danger"
+    },
+    buttonsStyling: true,
+    title: "آیا محصول از سبد خرید حذف شود؟",
+    showCancelButton: true,
+    confirmButtonText: "بله",
+    cancelButtonText: "خیر",
 
-//حذف از سبد
-  /*function removeToCart(e) {
-    if( e.target.classList == 'remove' ){
-        let status =confirm('sure?');
-        if(status){
-            const id = e.target.getAttribute('data-id')
-            e.target.parentElement.remove();
-        }
+  }).then((result) => {
+    /* Read more about isConfirmed, isDenied below */
+    if (result.isConfirmed) {
+      cart = cart.filter((item) => item.id !== id);
+      updateCart()
     }
-   }*/
-        function removeToCart(e) {
-    if( e.target.classList == 'remove' ){
-        const swalWithBootstrapButtons = Swal.mixin({
-            customClass: {
-              confirmButton: "btn btn-success",
-              cancelButton: "btn btn-danger"
-            },
-            buttonsStyling: false
-          });
-          swalWithBootstrapButtons.fire({
-            title: " محصول از سبد خرید حذف شود؟ ",
-            icon: "question",
-            showCancelButton: true,
-            confirmButtonText: "بله",
-            cancelButtonText: "خیر",
-            reverseButtons: true
-          }).then((result) => {
-            if (result.isConfirmed) {
-                const id = e.target.getAttribute('data-id')
-               e.target.parentElement.remove();
-               removetodofromlocalstorage(id);
-            } else if (
-              result.dismiss === Swal.DismissReason.cancel
-            ) {
-            }
-          })
-    }
-   }
-    
- //Add to local storage...
- function addtodofromlocalstorage(title, id) {
-    const todolist = getFromLocalStorage();
-    const list = {
-    id:id,
-    title:title,
-   }
-   todolist.push(list);
-   localStorage.setItem('toDoList',JSON.stringify(todolist));
-} 
-
-//Remove from local storage...
-function removetodofromlocalstorage(id) {
-    const todolist = getFromLocalStorage();
-    let idIndex;
-
-    todolist.map((todo, index) => {
-       if( todo.id === id ){
-         idIndex = index;
-         return; 
-       }
-    })
-    todolist.splice(idIndex,1);
-
-    localStorage.setItem('toDoList', JSON.stringify( todolist ));
-} 
-
-   //Get from local storage...
-  function getFromLocalStorage() {
-    const todolist = localStorage.getItem('toDoList');
-    let list;
-    if( todolist == null){
-        list =[];
-    }else{
-        list = JSON.parse(todolist);
-    }
-    return list;
-  } 
-  
-
-
-// load to do(ذخیره در استوریج)
-function loadToDo() {
-    const toDoList =getFromLocalStorage();
-
-    toDoList.map(todo => {
-        CartItems.innerHTML += SetToDoElement(todo.title);
-    });
+  });
+  ;
 }
 
- 
- //Set To Do Element
-function SetToDoElement(title, id) {
-    return `
-    <div class="item">
-        <button class="remove" data-id="${id}">حذف</button>
-        <div class="qty"></div>
-        <div class="item-title">${title}</div>
-    </div>
-    `;
-}
+// change number of units for an item
+function changeNumberOfUnits(action, id) {
+  cart = cart.map((item) => {
+    let numberOfUnits = item.numberOfUnits;
 
-  
-loadToDo();
+    if (item.id === id) {
+      if (action === "minus" && numberOfUnits > 1) {
+        numberOfUnits--;
+      } else if (action === "plus" && numberOfUnits < item.instock) {
+        numberOfUnits++;
+      }
+    }
+
+    return {
+      ...item,
+      numberOfUnits,
+    };
+  });
+
+  updateCart();
+}
